@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="container py-3">
+    <h2 class="fw-bold text-center">
+        Hello
+    </h2>
+    <div class="text-center">
+        <a href="{% url 'accounts:signup' %}" class="btn btn-success mt-3">Sign Up</a>
+        <a href="{% url 'login' %}" class="btn btn-info mt-3">Sign In</a>
+    </div>
+</div>
+{% endblock %}

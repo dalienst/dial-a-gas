@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-3">
+    <div class="text-center">
+        <h2>Sign up for a free account</h2>
+        <p>Select below the type of account you want to create</p>
+        <a href="{% url 'accounts:client-signup' %}" class="btn btn-info mt-3">Customer <i class="bi bi-arrow-right"></i></a>
+        <a href="{% url 'accounts:vendor-signup' %}" class="btn btn-success mt-3">Vendor <i class="bi bi-arrow-right"></i></a>
+    </div>
+</div>
+{% endblock %}
