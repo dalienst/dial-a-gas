@@ -40,50 +40,55 @@
     <section class="mt-3 mb-3">
         <div class="row">
             <div class="col-md-3 col-sm-12 border-end ">
-                <p class="fw-bold">Shop Details</p>
 
-                <div class="card mb-3">
-                    {% for shop in vendor_shop %}
-                    <div class="card-body">
-                        {% if shop.image %}
-                        <img src="{{shop.image.url}}" alt="" class="shopimage mb-3">
-                        {% else %}
-                        <img src="https://images.unsplash.com/photo-1632224120632-895c7132d2b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGdhcyUyMHN0YXRpb258ZW58MHx8MHx8fDA%3D" 
-                        alt="" class="shopimage mb-3">
-                        {% endif %}
-                        {% if not shop.name or not shop.location or not shop.contact %}
-                        <p class="card-text">Update Shop Information</p>
-                        <a href="{%url 'shop:shop-update' shop.id %}">Update</a>
-                        {% else %}
-                        <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
-                        <p class="card-text"><strong>Contact: </strong>+254{{shop.contact}}</p>
-                        <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
-                        <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-sm btn-info">Update</a>
-                        {% endif %}
+                <div>
+                    <p class="fw-bold">Your Profile</p>
+                    <div class="card mb-3 bg-primary-subtle bg-gradient shadow rounded-3">
+                        {% for vendor in vendor_profile %}
+                        <div class="card-body">
+                            {% if vendor.image %}
+                            <img src="{{vendor.image.url}}" alt="avatar" class="avatarimg mb-3">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D"
+                                alt="" class="avatarimg mb-3">
+                            {% endif %}
+                            <p class="card-text"><strong>{{user.get_username}}</strong></p>
+                            {% if not vendor.phone_number or not vendor.shop_location %}
+                            <p class="card-text">Update Personal Information</p>
+                            <a href="{%url 'accounts:vendor-update' user.id %}">Update</a>
+                            {% else %}
+                            <p class="card-text"><strong>Contact: </strong>+254{{vendor.phone_number}}</p>
+                            <p class="card-text"><strong>Location: </strong>{{vendor.shop_location}}</p>
+                            <a href="{%url 'accounts:vendor-update' user.id %}" class="btn btn-dark shadow rounded-4">Update</a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
-
-                <p class="fw-bold">Your Profile</p>
-                <div class="card mb-3">
-                    {% for vendor in vendor_profile %}
-                    <div class="card-body">
-                        {% if vendor.image %}
-                        <img src="{{profile.image.url}}" alt="" class="avatarimg mb-3">
-                        {% else %}
-                        <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D"
-                            alt="" class="avatarimg mb-3">
-                        {% endif %}
-                        {% if not vendor.phone_number or not vendor.shop_location %}
-                        <p class="card-text">Update Personal Information</p>
-                        <a href="{%url 'accounts:vendor-update' user.id %}">Update</a>
-                        {% else %}
-                        <p class="card-text">{{vendor.phone_number}}</p>
-                        <p class="card-text">{{vendor.shop_location}}</p>
-                        <a href="{%url 'accounts:vendor-update' user.id %}" class="btn btn-sm btn-info">Update</a>
-                        {% endif %}
+                <hr>
+                <div>
+                    <p class="fw-bold">Shop Details</p>
+                    <div class="card mb-3 bg-success-subtle bg-gradient shadow rounded-3">
+                        {% for shop in vendor_shop %}
+                        <div class="card-body">
+                            {% if shop.image %}
+                            <img src="{{shop.image.url}}" alt="" class="shopimage mb-3">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1632224120632-895c7132d2b1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGdhcyUyMHN0YXRpb258ZW58MHx8MHx8fDA%3D"
+                                alt="" class="shopimage mb-3">
+                            {% endif %}
+                            {% if not shop.name or not shop.location or not shop.contact %}
+                            <p class="card-text">Update Shop Information</p>
+                            <a href="{%url 'shop:shop-update' shop.id %}">Update</a>
+                            {% else %}
+                            <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
+                            <p class="card-text"><strong>Contact: </strong>+254{{shop.contact}}</p>
+                            <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
+                            <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-dark shadow rounded-4">Update</a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>

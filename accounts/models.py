@@ -21,6 +21,17 @@ class User(AbstractUser, UniversalIdModel, TimeStampedModel):
         return super().get_username()
 
 
+# @receiver(post_save, sender=User)
+# def create_vendor_and_shop(sender, instance, created, **kwargs):
+#     if created and instance.is_vendor:
+#         vendor = Vendor.objects.create(user=instance)
+#         Shop.objects.create(
+#             owner=instance,
+#             name=f"{instance.username}'s Shop",
+#             location="Default Location",
+#         )
+
+
 class Client(TimeStampedModel):
     user = models.OneToOneField(
         AUTH_USER_MODEL,
@@ -43,7 +54,7 @@ class Vendor(TimeStampedModel):
         primary_key=True,
         related_name="vendor",
     )
-    image = CloudinaryField("vendor_images", blank=True, null=True)
+    image = CloudinaryField("Vendor Images", blank=True, null=True)
     phone_number = models.BigIntegerField(blank=True, null=True)
     shop_location = models.CharField(max_length=1000, blank=True, null=True)
 

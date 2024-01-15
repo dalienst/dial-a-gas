@@ -20,3 +20,60 @@ class Shop(UniversalIdModel, TimeStampedModel):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Delivery(models.Model):
+    TYPE_CHOICES = [
+        ("selfpickup", "Pickup Gas by yourself"),
+        ("delivery", "Get your gas delivered at your doorstep"),
+    ]
+
+    type = models.CharField(max_length=100, choices=TYPE_CHOICES)
+    price = models.PositiveIntegerField(default=0)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="deliveries")
+
+    class Meta:
+        verbose_name_plural = "Deliveries"
+
+    def __str__(self) -> str:
+        return self.type
+
+
+class Category(models.Model):
+    MASS_CHOICES = [
+        ("small", "Small - 6kg"),
+        ("medium", "Medium - 13kg"),
+        ("large", "Large - 26kg"),
+        # Add other choices as needed
+    ]
+
+    name = models.CharField(max_length=100)
+    mass = models.CharField(max_length=100, choices=MASS_CHOICES)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="categories")
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Product(UniversalIdModel, TimeStampedModel):
+    name = models.CharField(max_length=1000)
+    product_image = CloudinaryField("Product Image", blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    price = models.PositiveIntegerField()
+    availability = models.BooleanField(default=True)
+    delivery = models.ManyToManyField(Delivery)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="products")
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["name", "price", "availability"]),
+        ]
+
+    def __str__(self) -> str:
+        return self.name
