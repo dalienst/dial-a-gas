@@ -49,7 +49,7 @@ class Category(models.Model):
     ]
 
     name = models.CharField(max_length=100)
-    mass = models.CharField(max_length=100, choices=MASS_CHOICES)
+    mass = models.CharField(max_length=100, choices=MASS_CHOICES, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="categories")
 
@@ -57,16 +57,18 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.name} - {self.mass}"
 
 
 class Product(UniversalIdModel, TimeStampedModel):
     name = models.CharField(max_length=1000)
     product_image = CloudinaryField("Product Image", blank=True, null=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField()
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, blank=True, null=True
+    )
     price = models.PositiveIntegerField()
     availability = models.BooleanField(default=True)
-    delivery = models.ManyToManyField(Delivery)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="products")
 
