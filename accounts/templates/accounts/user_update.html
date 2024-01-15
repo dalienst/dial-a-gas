@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+{% if user.is_vendor %}
+<section class="container mb-3 mt-3 py-3 px-3">
+    <form method="post" class="p-4 border rounded-3 bg-body-tertiary" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            {{ form.image|as_crispy_field }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.phone_number|as_crispy_field }}
+        </div>
+        <div class="form-floating mb-3">
+            {{ form.shop_location|as_crispy_field }}
+        </div>
+        <button class="btn btn-dark" type="submit">Update</button>
+    </form>
+</section>
+{% endif %}
+{% endblock %}

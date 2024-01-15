@@ -146,8 +146,9 @@ class VendorUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     fields = [
         "image",
         "phone_number",
-        "location",
+        "shop_location",
     ]
+    success_url = reverse_lazy("accounts:dashboard")
 
     def get_queryset(self):
         return Vendor.objects.filter(user=self.request.user)
@@ -156,8 +157,10 @@ class VendorUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         self.object = form.save()
         return super().form_valid(form)
 
-    def get_success_url(self) -> str:
-        return reverse_lazy("accounts:vendor-profile", kwargs={"pk": self.object.pk})
+    # def get_success_url(self) -> str:
+    #     return super().get_success_url() or reverse_lazy(
+    #         "accounts:vendor-profile", kwargs={"pk": self.object.pk}
+    #     )
 
 
 # Admin Views

@@ -20,7 +20,7 @@
                         <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D"
                             alt="" class="avatarimg mb-3">
                         {% endif %}
-                        {% if not client.phone_number or client.location %}
+                        {% if not client.phone_number or not client.location %}
                         <p class="card-text">Update Personal Information</p>
                         <a href="">Update</a>
                         {% else %}
@@ -56,7 +56,7 @@
                         <a href="{%url 'shop:shop-update' shop.id %}">Update</a>
                         {% else %}
                         <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
-                        <p class="card-text"><strong>Contact: </strong>{{shop.contact}}</p>
+                        <p class="card-text"><strong>Contact: </strong>+254{{shop.contact}}</p>
                         <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
                         <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-sm btn-info">Update</a>
                         {% endif %}
@@ -74,13 +74,13 @@
                         <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D"
                             alt="" class="avatarimg mb-3">
                         {% endif %}
-                        {% if not vendor.phone_number or vendor.shop_location %}
+                        {% if not vendor.phone_number or not vendor.shop_location %}
                         <p class="card-text">Update Personal Information</p>
-                        <a href="">Update</a>
+                        <a href="{%url 'accounts:vendor-update' user.id %}">Update</a>
                         {% else %}
                         <p class="card-text">{{vendor.phone_number}}</p>
                         <p class="card-text">{{vendor.shop_location}}</p>
-                        <a href="" class="btn btn-sm btn-info">Update</a>
+                        <a href="{%url 'accounts:vendor-update' user.id %}" class="btn btn-sm btn-info">Update</a>
                         {% endif %}
                     </div>
                     {% endfor %}
