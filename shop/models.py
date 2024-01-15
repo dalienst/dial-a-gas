@@ -15,7 +15,7 @@ class Shop(UniversalIdModel, TimeStampedModel):
     )
     name = models.CharField(max_length=1000, blank=True, null=True)
     location = models.CharField(max_length=1000, blank=True, null=True)
-    image = CloudinaryField("shop_images", blank=True, null=True)
+    image = CloudinaryField("Shop Image", blank=True, null=True)
     contact = models.BigIntegerField(blank=True, null=True)
 
     def __str__(self) -> str:
