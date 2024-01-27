@@ -113,8 +113,11 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = "product_update.html"
     success_message = "Product Updated"
     fields = [
+        "name",
+        "product_image",
         "availability",
         "price",
+        "category",
     ]
     success_url = reverse_lazy("accounts:dashboard")
 
