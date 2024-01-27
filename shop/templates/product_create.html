@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Create Product{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mb-3 py-3">
+    <div class="mb-3 mt-3 text-center">
+        <h3 class="fw-bold">Create a Product</h3>
+    </div>
+    <div class="col-md-10 mx-auto col-lg-5">
+        <form class="rounded-3 bg-body-tertiary p-4 border" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-floating">
+                {{form.name|as_crispy_field}}
+            </div>
+            <div class="form-floating">
+                {{form.product_image|as_crispy_field}}
+            </div>
+            <div class="form-floating">
+                {{form.description|as_crispy_field}}
+            </div>
+            <div class="form-floating">
+                {{form.price|as_crispy_field}}
+            </div>
+            <div class="form-floating">
+                {{form.availability|as_crispy_field}}
+            </div>
+            <div class="form-floating">
+                {{form.category|as_crispy_field}}
+            </div>
+            <button class="btn btn-dark w-100" type="submit">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
