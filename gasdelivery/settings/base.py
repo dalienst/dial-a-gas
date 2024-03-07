@@ -188,14 +188,4 @@ cloudinary.config(
     api_secret=config("CLOUDINARY_API_SECRET"),
 )
 
-
-# Safaricom Mpesa Daraja API
-SHORTCODE = config("SHORTCODE")
-TRANSACTION_TYPE = config("TRANSACTION_TYPE")
-CONSUMER_KEY = config("CONSUMER_KEY")
-CONSUMER_SECRET = config("CONSUMER_SECRET")
-ACCESS_TOKEN_URL = config("ACCESS_TOKEN_URL")
-CALLBACK_URL = config("CALLBACK_URL")
-PASS_KEY = config("PASS_KEY")
-
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
