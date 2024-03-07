@@ -17,3 +17,7 @@
     width: 50px;
     object-fit: cover;
 }
+
+.product-image {
+    height: 200px;
+}

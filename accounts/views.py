@@ -34,6 +34,7 @@ def dashboard(request):
     vendor_shop = Shop.objects.filter(owner=request.user)
     vendor_category = Category.objects.filter(created_by=request.user)
     vendor_product = Product.objects.filter(created_by=request.user)
+    client_products = Product.objects.filter(availability=True)
     return render(
         request,
         "accounts/dashboard.html",
@@ -43,6 +44,7 @@ def dashboard(request):
             "vendor_shop": vendor_shop,
             "vendor_category": vendor_category,
             "vendor_product": vendor_product,
+            "client_products": client_products,
         },
     )
 

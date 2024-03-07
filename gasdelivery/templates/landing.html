@@ -9,9 +9,16 @@
     <h2 class="fw-bold text-center">
         Hello
     </h2>
+    {% if user.is_authenticated %}
+    <p class="text-center">Welcome, {{user.get_username}}</p>
+    <div class="text-center">
+        <a href="{% url 'accounts:dashboard' %}" class="btn btn-info mt-3">Dashboard</a>
+    </div>
+    {% else %}
     <div class="text-center">
         <a href="{% url 'accounts:signup' %}" class="btn btn-success mt-3">Sign Up</a>
         <a href="{% url 'login' %}" class="btn btn-info mt-3">Sign In</a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

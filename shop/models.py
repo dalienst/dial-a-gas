@@ -42,9 +42,9 @@ class Delivery(models.Model):
 
 class Category(models.Model):
     MASS_CHOICES = [
-        ("small", "Small - 6kg"),
-        ("medium", "Medium - 13kg"),
-        ("large", "Large - 26kg"),
+        ("6kg", "Small - 6kg"),
+        ("13kg", "Medium - 13kg"),
+        ("26kg", "Large - 26kg"),
         # Add other choices as needed
     ]
 
