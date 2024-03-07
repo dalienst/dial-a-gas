@@ -22,11 +22,11 @@
                         {% endif %}
                         {% if not client.phone_number or not client.location %}
                         <p class="card-text">Update Personal Information</p>
-                        <a href="">Update</a>
+                        <a href="{%url 'accounts:client-update' user.id %}">Update</a>
                         {% else %}
                         <p class="card-text">{{client.phone_number}}</p>
                         <p class="card-text">{{client.location}}</p>
-                        <a href="" class="btn btn-sm btn-info">Update</a>
+                        <a href="{%url 'accounts:client-update' user.id %}" class="btn btn-sm btn-info">Update</a>
                         {% endif %}
                     </div>
                     {% endfor %}

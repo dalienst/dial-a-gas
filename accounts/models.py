@@ -39,7 +39,7 @@ class Client(TimeStampedModel):
         primary_key=True,
         related_name="client",
     )
-    image = CloudinaryField("buyer_images", blank=True, null=True)
+    image = CloudinaryField("Client Image", blank=True, null=True)
     phone_number = models.BigIntegerField(blank=True, null=True)
     location = models.CharField(max_length=1000, blank=True, null=True)
 

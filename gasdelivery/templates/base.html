@@ -41,7 +41,7 @@
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                        <button type="submit" class="nav-link btn bg-danger p-2 rounded">Logout</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger p-2 rounded">Logout</button>
                         </form>
                     </li>
                     {% else %}
