@@ -2,6 +2,36 @@
 
 {% load static %}
 
-{% block title %}Welcome{% endblock %}
+{% block title %}{{product.name}}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<div class="container py-3">
+    <h6 class="fw-bold mt-3">{{product.name}}</h6>
+    <hr>
+   <div class="row">
+    <div class="col-md-9 col-sm-12 mb-3">
+        <p class="fw-bold">Product Details</p>
+        <div class="row">
+            <div class="col-md-3 col-sm-12 mb-3">
+                <img src="{{product.product_image.url}}" alt="" class="detail-image mb-2">
+            </div>
+            <div class="col-md-9 col-sm-12 mb-3">
+                <p class="text-secondary">{{product.category}}</p>
+                <p class="fw-bold">{{product.price}} Ksh</p>
+                <p>{{product.description}}</p>
+                <a href="" class="btn btn-outline-success btn-sm">Request Gas</a>
+            </div>
+        </div>
+        
+    </div>
+    <div class="col-md-3 col-sm-12 mb-3">
+        <p class="fw-bold">Shop Details</p>
+        <p class="fw-semibold">{{product.shop}}</p>
+        <p><strong>Owner: </strong>{{product.shop.owner}}</p>
+        <p><strong>Contact: </strong>0{{product.shop.contact}}</p>
+        <p><strong>Location: </strong>{{product.shop.location}}</p>
+    </div>
+   </div>
+    
+</div>
+{% endblock %}

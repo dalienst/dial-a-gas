@@ -34,6 +34,7 @@ def dashboard(request):
     vendor_shop = Shop.objects.filter(owner=request.user)
     vendor_category = Category.objects.filter(created_by=request.user)
     vendor_product = Product.objects.filter(created_by=request.user)
+    client_products = Product.objects.filter(availability=True)
     return render(
         request,
         "accounts/dashboard.html",
@@ -43,6 +44,7 @@ def dashboard(request):
             "vendor_shop": vendor_shop,
             "vendor_category": vendor_category,
             "vendor_product": vendor_product,
+            "client_products": client_products,
         },
     )
 
@@ -105,6 +107,7 @@ class ClientUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         "phone_number",
         "location",
     ]
+    success_url = reverse_lazy("accounts:dashboard")
 
     def get_queryset(self):
         return Client.objects.filter(user=self.request.user)
@@ -113,8 +116,8 @@ class ClientUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         self.object = form.save()
         return super().form_valid(form)
 
-    def get_success_url(self) -> str:
-        return reverse_lazy("accounts:client-profile", kwargs={"pk": self.object.pk})
+    # def get_success_url(self) -> str:
+    #     return reverse_lazy("accounts:client-profile", kwargs={"pk": self.object.pk})
 
 
 # Vendor views
