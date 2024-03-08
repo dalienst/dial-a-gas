@@ -1,6 +1,6 @@
 from django import forms
 
-from shop.models import Product, Delivery, Category
+from shop.models import Product, Delivery, Category, Order
 
 
 class DeliveryForm(forms.ModelForm):
@@ -31,4 +31,13 @@ class ProductForm(forms.ModelForm):
             "price",
             "availability",
             "category",
+        ]
+
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = [
+            "contact",
+            "location",
         ]

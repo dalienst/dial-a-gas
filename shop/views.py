@@ -14,8 +14,8 @@ from django.contrib.auth.mixins import (
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 
-from shop.models import Shop, Product, Delivery, Category
-from shop.forms import ProductForm, DeliveryForm, CategoryForm
+from shop.models import Shop, Product, Delivery, Category, Order
+from shop.forms import ProductForm, DeliveryForm, CategoryForm, OrderForm
 
 
 class ShopUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
@@ -124,6 +124,19 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     def get_queryset(self) -> QuerySet[Any]:
         return Product.objects.filter(created_by=self.request.user)
 
+"""
+Order Views
+"""
+class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = "order_create.html"
+    success_message = "Order created successfully"
+    success_url = reverse_lazy("accounts:dashboard")
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 """
 Allow vendors to create ads
