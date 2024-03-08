@@ -16,6 +16,7 @@ from django.views.generic.edit import FormView
 
 from shop.models import Shop, Product, Delivery, Category, Order
 from shop.forms import ProductForm, DeliveryForm, CategoryForm, OrderForm
+from shop.utils import send_sms
 
 
 class ShopUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
@@ -124,9 +125,12 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     def get_queryset(self) -> QuerySet[Any]:
         return Product.objects.filter(created_by=self.request.user)
 
+
 """
 Order Views
 """
+
+
 class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = Order
     form_class = OrderForm
@@ -136,7 +140,34 @@ class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        return super().form_valid(form)
+        form.instance.product = Product.objects.get(id=self.kwargs["product_id"])
+        form.instance.shop_contact = form.instance.product.shop_contact
+        response = super().form_valid(form)
+
+        # Sending sms
+        order = form.instance
+        order_reference = order.id
+        vendor_shop_contact = order.shop_contact
+        client = order.created_by.username
+        client_contact = order.contact
+        client_location = order.location
+        product_name = order.product.name
+
+        # Constructing a more professional message
+        message = (
+            f"New Order Received:\n"
+            f"Order Reference: {order_reference}\n"
+            f"Customer: {client}\n"
+            f"Contact: {client_contact}\n"
+            f"Delivery Location: {client_location}\n"
+            f"Product: {product_name}\n"
+            f"Please coordinate with the customer for delivery."
+        )
+
+        send_sms(vendor_shop_contact, message)
+
+        return response
+
 
 """
 Allow vendors to create ads

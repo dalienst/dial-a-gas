@@ -63,7 +63,6 @@ class Category(models.Model):
 class Product(UniversalIdModel, TimeStampedModel):
     name = models.CharField(max_length=1000)
     product_image = CloudinaryField("Product Image", blank=True, null=True)
-    description = models.TextField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, blank=True, null=True
     )
@@ -82,8 +81,13 @@ class Product(UniversalIdModel, TimeStampedModel):
 
 
 class Order(UniversalIdModel, TimeStampedModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="orders_related_to_product"
+    )
+    shop_contact = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="orders_related_to_shop_contact"
+    )
     contact = models.BigIntegerField()
     location = models.CharField(max_length=1000)
 
@@ -91,4 +95,9 @@ class Order(UniversalIdModel, TimeStampedModel):
         verbose_name_plural = "Orders"
 
     def __str__(self) -> str:
-        return f"{self.user.username} - {self.contact}"
+        return f"{self.created_by.username} - {self.contact}"
+
+    def save(self, *args, **kwargs):
+        # Fetch the shop contact from the associated product using the related name
+        self.shop_contact = self.product.shop.contact
+        super().save(*args, **kwargs)

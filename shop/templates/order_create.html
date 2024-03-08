@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Order {{product.id}}{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="col-md-4 col-sm-12 mb-3">
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-floating">
+            {{form.contact|as_crispy_field}}
+        </div>
+        <div class="form-floating">
+            {{form.location|as_crispy_field}}
+        </div>
+    </form>
+</div>
+{% endblock %}
