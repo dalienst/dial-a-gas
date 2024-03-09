@@ -48,7 +48,7 @@
                                     <p class="card-text fst-italic text-secondary">{{product.category.mass}}</p>
                                     <p class="card-text fw-bold">{{product.price}}</p>
                                     <p class="card-text">{{product.shop}}</p>
-                                    <a class="card-link btn btn-sm btn-outline-primary" href="{% url 'shop:product-detail' product.id%}" >Detail</a>
+                                    <a class="card-link btn btn-sm btn-outline-primary" href="{% url 'shop:create-order' product.id%}" >Detail</a>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                             <p class="card-text">Update Personal Information</p>
                             <a href="{%url 'accounts:vendor-update' user.id %}">Update</a>
                             {% else %}
-                            <p class="card-text"><strong>Contact: </strong>+254{{vendor.phone_number}}</p>
+                            <p class="card-text"><strong>Contact: </strong>{{vendor.phone_number}}</p>
                             <p class="card-text"><strong>Location: </strong>{{vendor.shop_location}}</p>
                             <a href="{%url 'accounts:vendor-update' user.id %}" class="btn btn-dark shadow rounded-4">Update</a>
                             {% endif %}
@@ -110,7 +110,7 @@
                             <a href="{%url 'shop:shop-update' shop.id %}">Update</a>
                             {% else %}
                             <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
-                            <p class="card-text"><strong>Contact: </strong>+254{{shop.contact}}</p>
+                            <p class="card-text"><strong>Contact: </strong>{{shop.contact}}</p>
                             <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
                             <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-dark shadow rounded-4">Update</a>
                             {% endif %}

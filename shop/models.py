@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from accounts.abstracts import UniversalIdModel, TimeStampedModel
 from cloudinary.models import CloudinaryField
@@ -16,10 +19,25 @@ class Shop(UniversalIdModel, TimeStampedModel):
     name = models.CharField(max_length=1000, blank=True, null=True)
     location = models.CharField(max_length=1000, blank=True, null=True)
     image = CloudinaryField("Shop Image", blank=True, null=True)
-    contact = models.BigIntegerField(blank=True, null=True)
+    shop_contact = models.CharField(
+        blank=True,
+        null=True,
+        max_length=9,
+        help_text=_(
+            "Enter the shop contact number without the country code e.g: 712345678."
+        ),
+    )
+    contact = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self) -> str:
         return self.name
+
+
+@receiver(pre_save, sender=Shop)
+def format_shop_contact(sender, instance, **kwargs):
+    # Format the contact number with the country code before saving
+    if instance.shop_contact:
+        instance.contact = f"+254{instance.shop_contact}"
 
 
 class Delivery(models.Model):
@@ -70,6 +88,7 @@ class Product(UniversalIdModel, TimeStampedModel):
     availability = models.BooleanField(default=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name="products")
+    shop_contact = models.CharField(max_length=20)
 
     class Meta:
         indexes = [
@@ -85,10 +104,13 @@ class Order(UniversalIdModel, TimeStampedModel):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="orders_related_to_product"
     )
-    shop_contact = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="orders_related_to_shop_contact"
+    shop_contact = models.CharField(max_length=20)
+    contact = models.CharField(
+        max_length=20,
+        help_text=_(
+            "Enter the contact number with the country code e.g: +254712345678."
+        ),
     )
-    contact = models.BigIntegerField()
     location = models.CharField(max_length=1000)
 
     class Meta:
@@ -97,7 +119,9 @@ class Order(UniversalIdModel, TimeStampedModel):
     def __str__(self) -> str:
         return f"{self.created_by.username} - {self.contact}"
 
-    def save(self, *args, **kwargs):
-        # Fetch the shop contact from the associated product using the related name
-        self.shop_contact = self.product.shop.contact
-        super().save(*args, **kwargs)
+
+@receiver(pre_save, sender=Order)
+def update_shop_contact(sender, instance, **kwargs):
+    # Ensure the product field is set before accessing its associated shop contact
+    if not instance.shop_contact:
+        instance.shop_contact = instance.product.shop_contact

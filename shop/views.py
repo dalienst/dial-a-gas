@@ -13,6 +13,7 @@ from django.contrib.auth.mixins import (
 )
 from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
+from django.shortcuts import get_object_or_404
 
 from shop.models import Shop, Product, Delivery, Category, Order
 from shop.forms import ProductForm, DeliveryForm, CategoryForm, OrderForm
@@ -27,7 +28,7 @@ class ShopUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         "image",
         "name",
         "location",
-        "contact",
+        "shop_contact",
     ]
     success_url = reverse_lazy("accounts:dashboard")
 
@@ -96,6 +97,7 @@ class ProductCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.shop = self.request.user.shop
+        form.instance.shop_contact = self.request.user.shop.contact
         return super().form_valid(form)
 
 
@@ -138,10 +140,17 @@ class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     success_message = "Order created successfully"
     success_url = reverse_lazy("accounts:dashboard")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product_id = self.kwargs.get("pk")
+        product = get_object_or_404(Product, id=product_id)
+        context["product"] = product
+        return context
+
     def form_valid(self, form):
         form.instance.created_by = self.request.user
-        form.instance.product = Product.objects.get(id=self.kwargs["product_id"])
-        form.instance.shop_contact = form.instance.product.shop_contact
+        form.instance.product = self.get_context_data()["product"]
+        product_name = form.instance.product.name
         response = super().form_valid(form)
 
         # Sending sms
@@ -151,7 +160,6 @@ class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         client = order.created_by.username
         client_contact = order.contact
         client_location = order.location
-        product_name = order.product.name
 
         # Constructing a more professional message
         message = (
