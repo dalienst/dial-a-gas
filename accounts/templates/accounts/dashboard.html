@@ -5,7 +5,7 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid bg-secondary-subtle">
     {% if user.is_client %}
     <section class="mt-3 mb-3">
         <div class="row">
@@ -45,7 +45,7 @@
                                 <img src="{{product.product_image.url}}" alt="" class="card-img-top">
                                 <div class="card-body">
                                     <p class="card-title">{{product.name}}</p>
-                                    <p class="card-text fst-italic text-secondary">{{product.category.mass}}</p>
+                                    <p class="card-text fst-italic text-secondary">{{product.mass}}</p>
                                     <p class="card-text fw-bold">{{product.price}}</p>
                                     <p class="card-text">{{product.shop}}</p>
                                     <a class="card-link btn btn-sm btn-outline-primary" href="{% url 'shop:create-order' product.id%}" >Detail</a>
@@ -64,39 +64,16 @@
     {% endif %}
     
     {% if user.is_vendor %}
-    <section class="mt-3 mb-3">
+    <section class="py-3">
         <div class="row">
 
             <!-- PROFILE AREA -->
-            <div class="col-md-2 col-sm-12 border-end mb-3">
+            <div class="col-md-3 col-sm-12 border-end border-dark-subtle mb-3">                
                 <div>
-                    <p class="fw-bold">Your Profile</p>
-                    <div class="card mb-3 bg-primary-subtle bg-gradient shadow rounded-3">
-                        {% for vendor in vendor_profile %}
-                        <div class="card-body">
-                            {% if vendor.image %}
-                            <img src="{{vendor.image.url}}" alt="avatar" class="avatarimg mb-3">
-                            {% else %}
-                            <img src="https://images.unsplash.com/photo-1634926878768-2a5b3c42f139?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D"
-                                alt="" class="avatarimg mb-3">
-                            {% endif %}
-                            <p class="card-text"><strong>{{user.get_username}}</strong></p>
-                            {% if not vendor.phone_number or not vendor.shop_location %}
-                            <p class="card-text">Update Personal Information</p>
-                            <a href="{%url 'accounts:vendor-update' user.id %}">Update</a>
-                            {% else %}
-                            <p class="card-text"><strong>Contact: </strong>{{vendor.phone_number}}</p>
-                            <p class="card-text"><strong>Location: </strong>{{vendor.shop_location}}</p>
-                            <a href="{%url 'accounts:vendor-update' user.id %}" class="btn btn-dark shadow rounded-4">Update</a>
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <hr>
-                <div>
-                    <p class="fw-bold">Shop Details</p>
-                    <div class="card mb-3 bg-success-subtle bg-gradient shadow rounded-3">
+                    <div class="card mb-2 rounded-0">
+                        <h4 class="card-header fw-bold">
+                            Shop Details
+                        </h4>
                         {% for shop in vendor_shop %}
                         <div class="card-body">
                             {% if shop.image %}
@@ -112,7 +89,7 @@
                             <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
                             <p class="card-text"><strong>Contact: </strong>{{shop.contact}}</p>
                             <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
-                            <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-dark shadow rounded-4">Update</a>
+                            <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-outline-dark">Update</a>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -121,88 +98,68 @@
             </div>
 
             <!-- DASHBOARD AREA -->
-            <div class="col-md-10 col-sm-12 mb-3">
-                <h4 class="fw-bold">Dashboard</h4>
-                <hr>
-                <section class="mt-3">
-                    <div class="row">
-
+            <div class="col-md-9 col-sm-12 mb-3">
+                <section class="card rounded-0">
+                    <h4 class="fw-bold card-header">Dashboard</h4>
+                    <div class="card-body">
                         <!-- Products side -->
-                        <div class="col-md-10 col-sm-12">
-                            <div class="py-3 mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6>Products</h6>
-                                    </div>
-                                    <div>
-                                        <a class="btn btn-success" href="{%url 'shop:product-create'%}"><i class="bi bi-plus-lg"></i></a>
-                                    </div>
+                        <div class="py-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6>Products</h6>
                                 </div>
-                                <hr>
-                                {% if vendor_product %}
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Image</th>
-                                                <th>Name</th>
-                                                <th>Category</th>
-                                                <th>Price</th>
-                                                <th>Availability</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {% for product in vendor_product %}
-                                            <tr>
-                                                <td>
-                                                    <img src="{{product.product_image.url}}" class="dash-image" alt="">
-                                                </td>
-                                                <td>{{product.name}}</td>
-                                                <td>{{product.category}}</td>
-                                                <td>{{product.price}}</td>
-                                                <td>{{product.availability}}</td>
-                                                <td><a href="{% url 'shop:product-update' product.id %}" class="btn-sm btn btn-primary">Update</a></td>
-                                            </tr>
-                                                {% endfor %}
-                                        </tbody>
-                                    </table>
+                                <div>
+                                    <a class="btn btn-success" href="{%url 'shop:product-create'%}"><i class="bi bi-plus-lg"></i></a>
                                 </div>
-                                
-                                {% else %}
-                                <p class="bg-warning p-3 fw-bold">Create a product <a href="{%url 'shop:product-create'%}">here</a></p>
-                                {% endif %}
                             </div>
-                        </div>
-
-                        <!-- Categories side -->
-                        <div class="col-md-2 col-sm-12">
-                            <div class="py-3 mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6>Categories</h6>
-                                    </div>
-                                    <div>
-                                        <a class="btn btn-primary" href="{%url 'shop:category-create'%}"><i class="bi bi-plus-lg"></i></a>
-                                    </div>
-                                </div>
-                                <hr>
-                                {% if vendor_category %}
-                                    <ul>
-                                        {% for category in vendor_category %}
-                                        <li>{{category.name}}</li>
+                            <hr>
+                            {% for shop in vendor_shop %}
+                            {% if not shop.name or not shop.location or not shop.contact %}
+                            <p class="bg-warning p-3 fw-bold">Update your shop details <a href="{%url 'shop:shop-update' shop.id %}">here</a> to
+                                continue</p>
+                            {% else %}
+                            {% if vendor_product %}
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Mass</th>
+                                            <th>Price</th>
+                                            <th>Availability</th>
+                                            <th>Shop</th>
+                                            <th>Shop Phone</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in vendor_product %}
+                                        <tr>
+                                            <td>
+                                                <img src="{{product.product_image.url}}" class="dash-image" alt="">
+                                            </td>
+                                            <td>{{product.name}}</td>
+                                            <td>{{product.mass}}</td>
+                                            <td>{{product.price}}</td>
+                                            <td>{{product.availability}}</td>
+                                            <td>{{product.shop}}</td>
+                                            <td>{{product.shop_contact}}</td>
+                                            <td><a href="{% url 'shop:product-update' product.id %}" class="btn-sm btn btn-primary">Update</a>
+                                            </td>
+                                        </tr>
                                         {% endfor %}
-                                    </ul>
-                                {% else %}
-                                <p class="bg-warning p-3 fw-bold">No Categories. Click <a href="{%url 'shop:category-create'%}">here</a> to create a
-                                    category</p>
-                                {% endif %}
-                            
+                                    </tbody>
+                                </table>
                             </div>
+                        
+                            {% else %}
+                            <p class="bg-info p-3 fw-bold">Create a product <a href="{%url 'shop:product-create'%}">here</a></p>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
-                    
-                    
                 </section>
             </div>
         </div>
