@@ -8,6 +8,7 @@ from shop.views import (
     ProductCreateView,
     ProductListView,
     ProductUpdateView,
+    ProductDeleteView,
     OrderCreateView,
 )
 
@@ -24,6 +25,9 @@ urlpatterns = [
     path(
         "product/<str:pk>/update/", ProductUpdateView.as_view(), name="product-update"
     ),
+    path(
+        "product/<str:pk>/delete/", ProductDeleteView.as_view(), name="product-delete"
+    ),
     path("products/", ProductListView.as_view(), name="product-list"),
-    path("order/<str:pk>/", OrderCreateView.as_view(), name="create-order")
+    path("order/<str:pk>/", OrderCreateView.as_view(), name="create-order"),
 ]

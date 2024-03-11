@@ -5,6 +5,7 @@ from django.views.generic import (
     UpdateView,
     ListView,
     DetailView,
+    DeleteView
 )
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import (
@@ -89,6 +90,11 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     def get_queryset(self) -> QuerySet[Any]:
         return Product.objects.filter(created_by=self.request.user)
 
+class ProductDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = "product_delete.html"
+    success_message = "Product Deleted Successfully"
+    success_url = reverse_lazy("accounts:dashboard")
 
 """
 Order Views

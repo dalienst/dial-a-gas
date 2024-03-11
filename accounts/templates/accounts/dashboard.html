@@ -89,7 +89,7 @@
                             <p class="card-text"><strong>Name: </strong>{{shop.name}}</p>
                             <p class="card-text"><strong>Contact: </strong>{{shop.contact}}</p>
                             <p class="card-text"><strong>Location: </strong>{{shop.location}}</p>
-                            <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-outline-dark">Update</a>
+                            <a href="{%url 'shop:shop-update' shop.id %}" class="btn btn-outline-dark btn-sm">Update</a>
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -103,10 +103,10 @@
                     <h4 class="fw-bold card-header">Dashboard</h4>
                     <div class="card-body">
                         <!-- Products side -->
-                        <div class="py-3 mb-3">
+                        <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h6>Products</h6>
+                                    <h6 class="fw-bold card-title">Products</h6>
                                 </div>
                                 <div>
                                     <a class="btn btn-success" href="{%url 'shop:product-create'%}"><i class="bi bi-plus-lg"></i></a>
@@ -145,7 +145,8 @@
                                             <td>{{product.availability}}</td>
                                             <td>{{product.shop}}</td>
                                             <td>{{product.shop_contact}}</td>
-                                            <td><a href="{% url 'shop:product-update' product.id %}" class="btn-sm btn btn-primary">Update</a>
+                                            <td><a href="{% url 'shop:product-update' product.id %}" class="btn-sm btn btn-outline-primary">Update</a>
+                                                <a href="{% url 'shop:product-delete' product.id%}" class="btn-sm btn btn-outline-danger">Delete</a>
                                             </td>
                                         </tr>
                                         {% endfor %}
