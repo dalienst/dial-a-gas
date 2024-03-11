@@ -8,7 +8,7 @@
 
 {% block content %}
 {% if user.is_vendor %}
-<section class="container mb-3 mt-3 py-3 px-3">
+<section class="container mb-3 py-3 px-3">
     <form method="post" class="p-4 border rounded-3 bg-body-tertiary" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-floating mb-3">
@@ -26,7 +26,7 @@
 {% endif %}
 
 {% if user.is_client %}
-<section class="container mb-3 mt-3 py-3 px-3">
+<section class="container mb-3 py-3 px-3">
     <form method="post" class="p-4 border rounded-3 bg-body-tertiary" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-floating mb-3">

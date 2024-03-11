@@ -7,11 +7,15 @@
 {% block content %}
 <div class="container-fluid bg-secondary-subtle">
     {% if user.is_client %}
-    <section class="mt-3 mb-3">
+    <section class="py-3">
         <div class="row">
-            <div class="col-md-3 col-sm-12 border-end mb-3">    
-                <p class="fw-bold">Your Profile</p>
-                <div class="card mb-3">
+
+            <!-- CLIENT PROFILE AREA -->
+            <div class="col-md-3 col-sm-12 border-end border-dark-subtle mb-3">    
+                <div class="card mb-2 rounded-0">
+                    <h4 class="card-header fw-bold">
+                        Profile Details
+                    </h4>
                     {% for client in client_profile %}
                     <div class="card-body">
                         {% if client.image %}
@@ -35,28 +39,48 @@
 
             <!-- GAS SUPPLIERS LIST -->
             <div class="col-md-9 col-sm-12 mb-3">
-                <p class="fw-bold">Gas Suppliers</p>
-                <hr>
-                {% if client_products %}
-                <section class="row">
-                    {% for product in client_products %}
-                        <div class="col-md-4 col-sm-12">
-                            <div class="card mb-3 h-100">
-                                <img src="{{product.product_image.url}}" alt="" class="card-img-top">
-                                <div class="card-body">
-                                    <p class="card-title">{{product.name}}</p>
-                                    <p class="card-text fst-italic text-secondary">{{product.mass}}</p>
-                                    <p class="card-text fw-bold">{{product.price}}</p>
-                                    <p class="card-text">{{product.shop}}</p>
-                                    <a class="card-link btn btn-sm btn-outline-primary" href="{% url 'shop:create-order' product.id%}" >Detail</a>
-                                </div>
+                <section class="card rounded-0">
+                    <h4 class="card-header fw-bold">
+                        Gas Suppliers
+                    </h4>
+                    <div class="card-body">
+                        {% if client_products %}
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Mass</th>
+                                            <th>Price</th>
+                                            <th>Shop</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in client_products %}
+                                        <tr>
+                                            <td>
+                                                <img src="{{product.product_image.url}}" class="dash-image" alt="">
+                                            </td>
+                                            <td>{{product.name}}</td>
+                                            <td>{{product.mass}}</td>
+                                            <td>{{product.price}}</td>
+                                            <td>{{product.shop}} - {{product.shop_contact}}</td>
+                                            <td>
+                                                <a href="{% url 'shop:create-order' product.id %}" class="btn-sm btn btn-outline-success">Order</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% else %}
+                        <p class="text-center bg-info p-3 fw-bold rounded">No Gas Suppliers</p>
+                        {% endif %}
+                    </div>
                 </section>
-                {% else %}
-                <p class="text-center bg-info p-3 fw-bold rounded">No Gas Suppliers</p>
-                {% endif %}
+                
             </div>
 
         </div>
