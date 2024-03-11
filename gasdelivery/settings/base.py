@@ -37,6 +37,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
+    "dial-a-gas.onrender.com",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -79,12 +80,14 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
+    "https://dial-a-gas.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "https://dial-a-gas.onrender.com",
 ]
 
 
@@ -93,7 +96,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_HEADERS = default_headers + ("Access-Control-Allow-Origin",)
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://investorafrica.onrender.com",
+    "https://dial-a-gas.onrender.com",
 ]
 
 ROOT_URLCONF = "gasdelivery.urls"
