@@ -18,7 +18,7 @@ from django.urls import reverse_lazy
 
 from accounts.models import Admin, Client, Vendor
 from accounts.forms import ClientCreationForm, VendorCreationForm, AdminCreationForm
-from shop.models import Shop, Category, Product
+from shop.models import Shop, Product
 
 User = get_user_model()
 
@@ -32,7 +32,6 @@ def dashboard(request):
     client_profile = Client.objects.filter(user=request.user)
     vendor_profile = Vendor.objects.filter(user=request.user)
     vendor_shop = Shop.objects.filter(owner=request.user)
-    vendor_category = Category.objects.filter(created_by=request.user)
     vendor_product = Product.objects.filter(created_by=request.user)
     client_products = Product.objects.filter(availability=True)
     return render(
@@ -42,7 +41,6 @@ def dashboard(request):
             "client_profile": client_profile,
             "vendor_profile": vendor_profile,
             "vendor_shop": vendor_shop,
-            "vendor_category": vendor_category,
             "vendor_product": vendor_product,
             "client_products": client_products,
         },

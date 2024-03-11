@@ -5,17 +5,18 @@ from django.views.generic import (
     UpdateView,
     ListView,
     DetailView,
+    DeleteView,
 )
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
 )
 from django.urls import reverse_lazy
-from django.views.generic.edit import FormView
+from django.shortcuts import get_object_or_404
 
-from shop.models import Shop, Product, Delivery, Category
-from shop.forms import ProductForm, DeliveryForm, CategoryForm
+from shop.models import Shop, Product, Order
+from shop.forms import ProductForm, OrderForm
+from shop.utils import send_sms
 
 
 class ShopUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
@@ -26,7 +27,7 @@ class ShopUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         "image",
         "name",
         "location",
-        "contact",
+        "shop_contact",
     ]
     success_url = reverse_lazy("accounts:dashboard")
 
@@ -45,42 +46,6 @@ class ShopDetailView(LoginRequiredMixin, ListView):
 
 
 """
-Delivery Views
-"""
-
-
-class DeliveryCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    model = Delivery
-    form_class = DeliveryForm
-    template_name = "delivery_create.html"
-    success_message = "Delivery Type created successfully"
-    success_url = reverse_lazy("accounts:dashboard")
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        form.instance.shop = self.request.user.shop
-        return super().form_valid(form)
-
-
-"""
-Category Views
-"""
-
-
-class CategoryCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    model = Category
-    form_class = CategoryForm
-    template_name = "category_create.html"
-    success_message = "Category created successfully"
-    success_url = reverse_lazy("accounts:dashboard")
-
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        form.instance.shop = self.request.user.shop
-        return super().form_valid(form)
-
-
-"""
 Product Views
 """
 
@@ -95,6 +60,7 @@ class ProductCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         form.instance.shop = self.request.user.shop
+        form.instance.shop_contact = self.request.user.shop.contact
         return super().form_valid(form)
 
 
@@ -117,7 +83,7 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         "product_image",
         "availability",
         "price",
-        "category",
+        "mass",
     ]
     success_url = reverse_lazy("accounts:dashboard")
 
@@ -125,103 +91,57 @@ class ProductUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return Product.objects.filter(created_by=self.request.user)
 
 
-"""
-Allow vendors to create ads
-Pay for advertisement space
-Advertising Templates
-"""
+class ProductDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
+    model = Product
+    template_name = "product_delete.html"
+    success_message = "Product Deleted Successfully"
+    success_url = reverse_lazy("accounts:dashboard")
 
 
 """
-combined category and delivery
+Order Views
 """
 
 
-# class DeliveryCategoryCreateView(LoginRequiredMixin, FormView):
-#     template_name = "delivery_category_create.html"
-#     success_url = reverse_lazy("accounts:dashboard")
+class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = "order_create.html"
+    success_message = "Order created successfully"
+    success_url = reverse_lazy("accounts:dashboard")
 
-#     def get(self, request, *args, **kwargs):
-#         delivery_form = DeliveryForm()
-#         category_form = CategoryForm()
-#         return self.render_to_response(
-#             self.get_context_data(
-#                 delivery_form=delivery_form, category_form=category_form
-#             )
-#         )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product_id = self.kwargs.get("pk")
+        product = get_object_or_404(Product, id=product_id)
+        context["product"] = product
+        return context
 
-#     def post(self, request, *args, **kwargs):
-#         delivery_form = DeliveryForm(request.POST)
-#         category_form = CategoryForm(request.POST)
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.instance.product = self.get_context_data()["product"]
+        product_name = form.instance.product.name
+        response = super().form_valid(form)
 
-#         if delivery_form.is_valid():
-#             delivery = delivery_form.save(commit=False)
-#             delivery.created_by = request.user
-#             delivery.shop = request.user.shop
-#             delivery.save()
-#             return self.form_valid(delivery_form, category_form)
+        # Sending sms
+        order = form.instance
+        order_reference = order.id
+        vendor_shop_contact = order.shop_contact
+        client = order.created_by.username
+        client_contact = order.contact
+        client_location = order.location
 
-#         elif category_form.is_valid():
-#             category = category_form.save(commit=False)
-#             category.created_by = request.user
-#             category.shop = request.user.shop
-#             category.save()
-#             return self.form_valid(delivery_form, category_form)
+        # Constructing a more professional message
+        message = (
+            f"New Order Received:\n"
+            f"Order Reference: {order_reference}\n"
+            f"Customer: {client}\n"
+            f"Contact: {client_contact}\n"
+            f"Delivery Location: {client_location}\n"
+            f"Product: {product_name}\n"
+            f"Please coordinate with the customer for delivery."
+        )
 
-#         else:
-#             return self.form_invalid(delivery_form, category_form)
+        send_sms(to=vendor_shop_contact, body=message)
 
-#     def form_valid(self, delivery_form, category_form):
-#         # Handle successful form submission
-#         return super().form_valid(delivery_form, category_form)
-
-#     def form_invalid(self, delivery_form, category_form):
-#         # Handle form validation errors
-#         return self.render_to_response(
-#             self.get_context_data(
-#                 delivery_form=delivery_form, category_form=category_form
-#             )
-#         )
-
-
-# class DeliveryCategoryCreateView(FormView):
-#     template_name = "delivery_category_create.html"
-#     success_url = reverse_lazy("accounts:dashboard")
-
-#     def get_form_class(self):
-#         # Determine which form class to use based on the submitted data
-#         if "delivery_form-submitted" in self.request.POST:
-#             return DeliveryForm
-#         elif "category_form-submitted" in self.request.POST:
-#             return CategoryForm
-#         else:
-#             # Default to DeliveryForm if no specific form is submitted
-#             return DeliveryForm
-
-#     def get(self, request, *args, **kwargs):
-#         # Use get_form_class to dynamically determine the form class
-#         form_class = self.get_form_class()
-#         form = form_class()
-#         return self.render_to_response(self.get_context_data(form=form))
-
-#     def post(self, request, *args, **kwargs):
-#         # Use get_form_class to dynamically determine the form class
-#         form_class = self.get_form_class()
-#         form = form_class(request.POST)
-
-#         if form.is_valid():
-#             instance = form.save(commit=False)
-#             instance.created_by = request.user
-#             instance.shop = request.user.shop
-#             instance.save()
-#             return self.form_valid(form)
-#         else:
-#             return self.form_invalid(form)
-
-#     def form_valid(self, form):
-#         # Handle successful form submission
-#         return super().form_valid(form)
-
-#     def form_invalid(self, form):
-#         # Handle form validation errors
-#         return self.render_to_response(self.get_context_data(form=form))
+        return response

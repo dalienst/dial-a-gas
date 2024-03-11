@@ -28,14 +28,17 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
+                        <a class="nav-link" href="{%url 'accounts:dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
                         <p class="nav-link">{{user.get_short_name}}</p>
                     </li>
                     {% if user.is_vendor %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{%url 'accounts:dashboard' %}">Dashboard</a>
+                        <a class="nav-link" href="">Orders</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">Orders</a>
+                        <a class="nav-link" href="{%url 'accounts:vendor-update' user.id %}">Profile</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
@@ -52,7 +55,7 @@
                 </ul>
             </div>
         </nav>
-        <div class="container-fluid h-100 mb-0 mx-0 my-0 px-0 py-0">
+        <div class="container-fluid bg-secondary-subtle mb-0 mx-0 my-0 px-0 py-0">
             <div class="container">
                 {% if messages %}
                 <div id="message-toast" class="position-fixed top-0 end-0 p-3 mt-5" style="z-index: 5">
@@ -82,15 +85,16 @@
             </div>
             {% block content %}
             {% endblock %}
+            <hr>
+            <footer class="py-3">
+                <div class="text-center text-secondary">
+                    <p>Dial-a-Gas<br>
+                        Get your gas delivered at your doorstep
+                    </p>
+                </div>
+            </footer>
         </div>
-        <hr>
-        <footer class="mynav py-3">
-            <div class="text-center text-secondary">
-                <p>Dial-a-Gas<br>
-                    Get your gas delivered at your doorstep
-                </p>
-            </div>
-        </footer>
+        
         {% block scripts %}
         {% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
