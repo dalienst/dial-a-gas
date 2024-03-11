@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Orders{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid py-3">
+    {% if user.is_vendor %}
+    <h6 class="fw-bold">Orders</h6>
+    <hr>
+    <section class="card rounded-0">
+        <div class="card-body">
+            {% if orders_list %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Customer</th>
+                            <th>Customer Phone</th>
+                            <th>Customer Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders_list %}
+                        <tr>
+                            <td>{{order.product}}</td>
+                            <td>{{order.product.price}}</td>
+                            <td>{{order.created_by}}</td>
+                            <td>{{order.contact}}</td>
+                            <td>{{order.location}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="bg-info p-2 border-primary rounded">No Orders Placed Yet</p>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if user.is_client %}
+    <h6 class="fw-bold">Orders</h6>
+    <hr>
+    <section class="card rounded-0">
+        <div class="card-body">
+            {% if order_list %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Vendor</th>
+                            <th>Vendor Phone</th>
+                            <th>Vendor Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in order_list %}
+                        <tr>
+                            <td>{{order.product}}</td>
+                            <td>{{order.product.price}}</td>
+                            <td>{{order.product.shop}}</td>
+                            <td>{{order.product.shop_contact}}</td>
+                            <td>{{order.product.shop.location}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="bg-info p-2 border-primary rounded">No Orders Placed Yet</p>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}
