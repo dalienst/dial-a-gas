@@ -145,3 +145,21 @@ class OrderCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         send_sms(to=vendor_shop_contact, body=message)
 
         return response
+
+
+class VendorOrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = "order_list.html"
+    context_object_name = "orders_list"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return Order.objects.filter(product__created_by=self.request.user)
+
+
+class ClientOrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = "order_list.html"
+    context_object_name = "order_list"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return Order.objects.filter(created_by=self.request.user)

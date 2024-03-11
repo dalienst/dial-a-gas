@@ -33,9 +33,14 @@
                     <li class="nav-item">
                         <p class="nav-link">{{user.get_short_name}}</p>
                     </li>
+                    {% if user.is_client %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'shop:client-orders' %}">Orders</a>
+                    </li>
+                    {% endif %}
                     {% if user.is_vendor %}
                     <li class="nav-item">
-                        <a class="nav-link" href="">Orders</a>
+                        <a class="nav-link" href="{% url 'shop:order-list' %}">Orders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{%url 'accounts:vendor-update' user.id %}">Profile</a>
